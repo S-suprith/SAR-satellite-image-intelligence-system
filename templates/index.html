@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<title>Satellite Image Intelligence System</title>
+
+<style>
+
+body{
+font-family:Arial;
+text-align:center;
+margin-top:40px;
+background:#f4f4f4;
+}
+
+img{
+width:300px;
+margin:20px;
+border:2px solid #333;
+background:white;
+}
+
+.container{
+display:flex;
+justify-content:center;
+align-items:center;
+flex-wrap:wrap;
+}
+
+.image-box{
+margin:10px;
+}
+
+.download-btn{
+margin-top:10px;
+}
+
+.report-box{
+margin-top:30px;
+padding:20px;
+border:2px solid #333;
+width:520px;
+margin-left:auto;
+margin-right:auto;
+background:#f9f9f9;
+border-radius:10px;
+}
+
+.chart{
+margin-top:30px;
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+<h2>Satellite Image Intelligence System</h2>
+
+<form action="/upload" method="POST" enctype="multipart/form-data">
+
+<input type="file" name="image" required>
+
+<br><br>
+
+<button type="submit">Analyze Image</button>
+
+</form>
+
+
+
+{% if input_image and output_image %}
+
+<h3>Result</h3>
+
+<div class="container">
+
+<div class="image-box">
+
+<p><b>Original Image</b></p>
+
+<img src="{{input_image}}">
+
+</div>
+
+
+<div class="image-box">
+
+<p><b>AI Colorized Image</b></p>
+
+<img src="{{output_image}}">
+
+{% if output_filename %}
+
+<div class="download-btn">
+
+<a href="{{ url_for('download_file', filename=output_filename) }}">
+
+<button>Download Processed Image</button>
+
+</a>
+
+</div>
+
+{% endif %}
+
+</div>
+
+</div>
+
+{% endif %}
+
+
+
+<!-- Segmentation Overlay -->
+
+{% if overlay_image %}
+
+<h3>Land Segmentation Map</h3>
+
+<img src="{{overlay_image}}" width="350">
+
+<p>
+🌳 Vegetation (Green)<br>
+🌊 Water (Blue)<br>
+🛣 Roads (Gray)<br>
+🏙 Buildings (Red)<br>
+🌾 Farmland (Yellow)
+</p>
+
+{% endif %}
+
+
+
+<!-- Satellite Report -->
+
+{% if vegetation %}
+
+<div class="report-box">
+
+<h2>Satellite Analysis Report</h2>
+
+<h3>🌍 Land Analysis</h3>
+
+<p style="color:green;">
+<b>🌳 Vegetation / Farmland :</b> {{vegetation}} %
+</p>
+
+<p style="color:blue;">
+<b>🌊 Rivers / Water :</b> {{water}} %
+</p>
+
+<p style="color:gray;">
+<b>🛣 Roads :</b> {{roads}} %
+</p>
+
+<p style="color:orange;">
+<b>🏙 Cities / Buildings :</b> {{buildings}} %
+</p>
+
+<p>
+<b>🌾 Other Land :</b> {{other}} %
+</p>
+
+<hr>
+
+<h3>⚠ Damage Detection</h3>
+
+<p><b>Destroyed Area :</b> {{damage}} %</p>
+
+<p><b>Status :</b> {{damage_status}}</p>
+
+</div>
+
+{% endif %}
+
+
+
+<!-- Pie Chart -->
+
+{% if chart %}
+
+<div class="chart">
+
+<h3>Land Distribution Chart</h3>
+
+<img src="{{chart}}" width="350">
+
+</div>
+
+{% endif %}
+
+
+
+<!-- Download Report -->
+
+{% if report %}
+
+<h3>Download Analysis Report</h3>
+
+<a href="{{report}}" download>
+
+<button>Download Full Report (PDF)</button>
+
+</a>
+
+{% endif %}
+
+
+
+</body>
+
+</html>

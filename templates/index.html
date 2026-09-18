@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<title>Satellite Image Intelligence System</title>
+
+<style>
+
+/* =========================
+   GLOBAL
+========================= */
+
+*{
+    box-sizing:border-box;
+}
+
+body{
+    font-family:Arial, Helvetica, sans-serif;
+    text-align:center;
+    margin:0;
+    padding:40px 20px;
+    background:
+        radial-gradient(circle at top left, #dceeff 0%, transparent 35%),
+        radial-gradient(circle at bottom right, #dff7e8 0%, transparent 35%),
+        linear-gradient(135deg,#f5f9ff,#eef4f8);
+    color:#1f2937;
+    min-height:100vh;
+}
+
+
+/* =========================
+   MAIN TITLE
+========================= */
+
+h2{
+    font-size:32px;
+    margin-bottom:10px;
+    color:#123b5d;
+    letter-spacing:0.5px;
+}
+
+h3{
+    color:#234e70;
+    margin-top:30px;
+}
+
+
+/* =========================
+   UPLOAD SECTION
+========================= */
+
+form{
+    width:520px;
+    max-width:95%;
+    margin:30px auto;
+    padding:35px;
+    background:rgba(255,255,255,0.9);
+    border-radius:18px;
+    border:1px solid #dbe7ef;
+    box-shadow:0 10px 30px rgba(30,70,100,0.12);
+}
+
+input[type="file"]{
+    width:100%;
+    padding:14px;
+    border:2px dashed #7aa7c7;
+    border-radius:12px;
+    background:#f7fbff;
+    cursor:pointer;
+    font-size:14px;
+}
+
+input[type="file"]:hover{
+    border-color:#2878ad;
+    background:#eef8ff;
+}
+
+button{
+    border:none;
+    padding:12px 24px;
+    border-radius:9px;
+    background:linear-gradient(135deg,#1261a0,#168aad);
+    color:white;
+    font-size:15px;
+    font-weight:bold;
+    cursor:pointer;
+    transition:0.25s;
+    box-shadow:0 5px 15px rgba(18,97,160,0.25);
+}
+
+button:hover{
+    transform:translateY(-2px);
+    box-shadow:0 8px 20px rgba(18,97,160,0.35);
+}
+
+
+/* =========================
+   RESULT CONTAINER
+========================= */
+
+.container{
+    display:flex;
+    justify-content:center;
+    align-items:stretch;
+    flex-wrap:wrap;
+    gap:25px;
+    margin:25px auto;
+    max-width:1000px;
+}
+
+.image-box{
+    margin:10px;
+    padding:20px;
+    background:white;
+    border-radius:18px;
+    border:1px solid #dbe5ec;
+    box-shadow:0 8px 25px rgba(0,0,0,0.08);
+    transition:0.25s;
+}
+
+.image-box:hover{
+    transform:translateY(-5px);
+    box-shadow:0 14px 30px rgba(0,0,0,0.12);
+}
+
+.image-box p{
+    font-size:17px;
+    color:#234e70;
+}
+
+
+/* =========================
+   IMAGES
+========================= */
+
+img{
+    width:300px;
+    max-width:100%;
+    margin:15px;
+    border:2px solid #d6e2eb;
+    background:white;
+    border-radius:12px;
+    padding:5px;
+    box-shadow:0 5px 15px rgba(0,0,0,0.08);
+}
+
+.image-box img{
+    object-fit:contain;
+}
+
+
+/* =========================
+   DOWNLOAD BUTTON
+========================= */
+
+.download-btn{
+    margin-top:12px;
+}
+
+.download-btn button{
+    background:linear-gradient(135deg,#16803c,#20a05a);
+}
+
+.download-btn button:hover{
+    box-shadow:0 8px 20px rgba(32,160,90,0.3);
+}
+
+
+/* =========================
+   SEGMENTATION
+========================= */
+
+.report-box{
+    margin-top:35px;
+    padding:30px;
+    border:1px solid #d7e4ec;
+    width:560px;
+    max-width:95%;
+    margin-left:auto;
+    margin-right:auto;
+    background:rgba(255,255,255,0.95);
+    border-radius:18px;
+    box-shadow:0 10px 30px rgba(30,70,100,0.12);
+}
+
+.report-box h2{
+    font-size:25px;
+    margin-top:0;
+    padding-bottom:15px;
+    border-bottom:1px solid #e1e8ee;
+}
+
+.report-box h3{
+    margin-top:20px;
+}
+
+.report-box p{
+    margin:14px 0;
+    padding:12px;
+    border-radius:9px;
+    background:#f7fafc;
+    font-size:16px;
+}
+
+
+/* =========================
+   SEGMENTATION MAP
+========================= */
+
+body > img[src*="overlay"],
+body img[width="350"]{
+    border:3px solid #234e70;
+    border-radius:15px;
+    padding:7px;
+    background:white;
+    box-shadow:0 10px 25px rgba(0,0,0,0.12);
+}
+
+body > p{
+    line-height:1.9;
+    color:#4b5563;
+}
+
+
+/* =========================
+   CHART
+========================= */
+
+.chart{
+    margin:35px auto;
+    padding:25px;
+    width:600px;
+    max-width:95%;
+    background:white;
+    border-radius:18px;
+    border:1px solid #dbe5ec;
+    box-shadow:0 10px 30px rgba(0,0,0,0.08);
+}
+
+.chart h3{
+    margin-top:0;
+    margin-bottom:15px;
+}
+
+.chart img{
+    border:none;
+    box-shadow:none;
+    background:transparent;
+}
+
+
+/* =========================
+   PDF DOWNLOAD
+========================= */
+
+a{
+    text-decoration:none;
+}
+
+body > a button{
+    background:linear-gradient(135deg,#7b2cbf,#9d4edd);
+}
+
+body > a button:hover{
+    box-shadow:0 8px 20px rgba(123,44,191,0.3);
+}
+
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media(max-width:650px){
+
+    body{
+        padding:25px 12px;
+    }
+
+    h2{
+        font-size:25px;
+    }
+
+    form{
+        padding:25px 18px;
+    }
+
+    .container{
+        flex-direction:column;
+        align-items:center;
+    }
+
+    .image-box{
+        width:95%;
+    }
+
+    img{
+        width:90%;
+        margin:10px;
+    }
+
+    .report-box{
+        width:95%;
+        padding:20px;
+    }
+
+    .chart{
+        width:95%;
+        padding:15px;
+    }
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h2>Satellite Image Intelligence System</h2>
+
+<form action="/upload" method="POST" enctype="multipart/form-data">
+
+<input type="file" name="image" required>
+
+<br><br>
+
+<button type="submit">Analyze Image</button>
+
+</form>
+
+{% if input_image and output_image %}
+
+<h3>Result</h3>
+
+<div class="container">
+
+<div class="image-box">
+
+<p><b>Original Image</b></p>
+
+<img src="{{input_image}}">
+
+</div>
+
+<div class="image-box">
+
+<p><b>AI Colorized Image</b></p>
+
+<img src="{{output_image}}">
+
+{% if output_filename %}
+
+<div class="download-btn">
+
+<a href="{{ url_for('download_file', filename=output_filename) }}">
+
+<button>Download Processed Image</button>
+
+</a>
+
+</div>
+
+{% endif %}
+
+</div>
+
+</div>
+
+{% endif %}
+
+<!-- Segmentation Overlay -->
+
+{% if overlay_image %}
+
+<h3>Land Segmentation Map</h3>
+
+<img src="{{overlay_image}}" width="350">
+
+<p>
+🌳 Vegetation (Green)<br>
+🌊 Water (Blue)<br>
+🛣 Roads (Gray)<br>
+🏙 Buildings (Red)<br>
+🌾 Farmland (Yellow)
+</p>
+
+{% endif %}
+
+<!-- Satellite Report -->
+
+{% if vegetation %}
+
+<div class="report-box">
+
+<h2>Satellite Analysis Report</h2>
+
+<h3>🌍 Land Analysis</h3>
+
+<p style="color:green;">
+<b>Vegetation :</b> {{vegetation}} %
+</p>
+
+<p style="color:blue;">
+<b>Water :</b> {{water}} %
+</p>
+
+<p style="color:gray;">
+<b>Roads :</b> {{roads}} %
+</p>
+
+<p style="color:orange;">
+<b>Buildings :</b> {{buildings}} %
+</p>
+
+<p>
+<b>🌾 Other Land :</b> {{other}} %
+
+</div>
+
+{% endif %}
+
+<!-- Pie Chart -->
+
+{% if chart %}
+
+<div class="chart">
+
+<h3>Land Distribution Chart</h3>
+
+<img src="{{chart}}" width="350">
+
+</div>
+
+{% endif %}
+
+<!-- Download Report -->
+
+{% if report %}
+
+<h3>Download Analysis Report</h3>
+
+<a href="{{report}}" download>
+
+<button>Download Full Report (PDF)</button>
+
+</a>
+
+{% endif %}
+
+</body>
+
+</html>
